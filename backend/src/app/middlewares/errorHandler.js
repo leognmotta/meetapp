@@ -1,5 +1,4 @@
 import ApiError from '../../helpers/apiError';
-import env from '../../config/env';
 
 class ErrorHandler {
   catchNotFound(req, res, next) {
@@ -14,7 +13,7 @@ class ErrorHandler {
 
   catchErrors(error, req, res, next) {
     // eslint-disable-next-line no-console
-    if (env.NODE_ENV === 'dev') console.log(error);
+    if (process.env.NODE_ENV === 'dev') console.log(error);
 
     const { name, message, fields } = error;
     const status = error.statusCode || 500;

@@ -1,7 +1,11 @@
+import 'dotenv/config';
+
 import express from 'express';
+import path from 'path';
 import routes from './routes';
 import ErrorHandler from './app/middlewares/errorHandler';
-import Database from './database';
+
+import './database';
 
 class App {
   constructor() {
@@ -9,11 +13,14 @@ class App {
     this.middlewares();
     this.routes();
     this.errorMiddlewares();
-    this.database();
   }
 
   middlewares() {
     this.server.use(express.json());
+    this.server.use(
+      '/files',
+      express.static(path.resolve(__dirname, '..', 'tmp', 'uploads'))
+    );
   }
 
   routes() {
@@ -23,10 +30,6 @@ class App {
   errorMiddlewares() {
     this.server.use(ErrorHandler.catchNotFound);
     this.server.use(ErrorHandler.catchErrors);
-  }
-
-  database() {
-    this.database = new Database();
   }
 }
 

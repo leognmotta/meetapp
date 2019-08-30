@@ -1,11 +1,11 @@
-const env = require('./env');
+require('dotenv/config');
 
 const database = {
-  dialect: env.DB_DIALECT,
-  host: env.DB_HOST,
-  username: env.DB_USERNAME,
-  password: env.DB_PASSWORD,
-  database: env.DB_NAME,
+  dialect: process.env.DB_DIALECT,
+  host: process.env.DB_HOST,
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   define: {
     timestamps: true,
     underscored: true,
