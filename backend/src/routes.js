@@ -25,6 +25,7 @@ routes.put(
 
 routes.post('/sessions', SessionValidation, SessionController.store);
 
+routes.get('/meetups', AuthMiddleware, MeetupController.index);
 routes.post(
   '/meetups',
   AuthMiddleware,

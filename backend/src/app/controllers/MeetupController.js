@@ -1,9 +1,52 @@
-import { parseISO, isBefore } from 'date-fns';
+import { parseISO, isBefore, startOfDay, endOfDay } from 'date-fns';
+import { Op } from 'sequelize';
 import Meetup from '../models/Meetup';
 
 import ApiError from '../../helpers/apiError';
 
 class MeetupController {
+  async index(req, res, next) {
+    try {
+      const { page = 1, perPage = 1, date } = req.query;
+      const user_id = req.userId;
+      const where = { user_id };
+
+      if (date) {
+        const searchDate = parseISO(date);
+        where.date = {
+          [Op.between]: [startOfDay(searchDate), endOfDay(searchDate)],
+        };
+      }
+
+      const meetups = await Meetup.findAndCountAll({
+        where,
+        limit: perPage,
+        offset: (page - 1) * perPage,
+      });
+
+      const maxPage = Math.ceil(meetups.count / perPage);
+      const previousPage = parseInt(page, 10) - 1;
+      const hasPreviousPage = previousPage >= 1;
+      const nextPage = parseInt(page, 10) + 1;
+      const hasNextPage = maxPage > page;
+      const currentPage = parseInt(page, 10);
+
+      return res.json({
+        data: { meetups: meetups.rows },
+        pagination: {
+          maxPage,
+          currentPage,
+          hasPreviousPage,
+          previousPage,
+          hasNextPage,
+          nextPage,
+        },
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
   async store(req, res, next) {
     try {
       if (isBefore(parseISO(req.body.date), new Date()))
