@@ -18,7 +18,12 @@ class ErrorHandler {
     const { name, message, fields } = error;
     const status = error.statusCode || 500;
 
-    return res.status(status).json({ name, message, fields, status });
+    return res.status(status).json({
+      name,
+      message: status === 500 ? 'Internal error.' : message,
+      fields,
+      status,
+    });
   }
 }
 
