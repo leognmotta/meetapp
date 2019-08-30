@@ -7,7 +7,7 @@ import ApiError from '../../helpers/apiError';
 class MeetupController {
   async index(req, res, next) {
     try {
-      const { page = 1, perPage = 1, date } = req.query;
+      const { page = 1, perPage = 10, date } = req.query;
       const user_id = req.userId;
       const where = { user_id };
 
@@ -99,6 +99,35 @@ class MeetupController {
       await meetup.update(req.body);
 
       return res.json(meetup);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async delete(req, res, next) {
+    try {
+      const meetup = await Meetup.findByPk(req.params.id);
+
+      if (!meetup)
+        throw new ApiError(
+          'Meetup not found.',
+          'No meetup was found with the provided id.',
+          400
+        );
+
+      if (meetup.user_id !== req.userId)
+        throw new ApiError(
+          'Denied.',
+          'You can only delete your own meetups.',
+          401
+        );
+
+      if (meetup.past)
+        throw new ApiError('Past Meetup.', 'Cannot delete past meetups.', 400);
+
+      await meetup.destroy();
+
+      return res.json();
     } catch (error) {
       return next(error);
     }

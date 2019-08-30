@@ -38,6 +38,7 @@ routes.put(
   MeetupValidation.validate,
   MeetupController.update
 );
+routes.delete('/meetups/:id', AuthMiddleware, MeetupController.delete);
 
 routes.post(
   '/files',
