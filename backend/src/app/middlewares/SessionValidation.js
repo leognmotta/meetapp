@@ -25,4 +25,4 @@ class SessionValidation {
   }
 }
 
-export default new SessionValidation();
+export default new SessionValidation().validateStoreUser;

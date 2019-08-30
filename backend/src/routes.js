@@ -23,17 +23,19 @@ routes.put(
   UserController.update
 );
 
-routes.post(
-  '/sessions',
-  SessionValidation.validateStoreUser,
-  SessionController.store
-);
+routes.post('/sessions', SessionValidation, SessionController.store);
 
 routes.post(
   '/meetups',
   AuthMiddleware,
-  MeetupValidation.validateStoreMeetup,
+  MeetupValidation.validate,
   MeetupController.store
+);
+routes.put(
+  '/meetups/:id',
+  AuthMiddleware,
+  MeetupValidation.validate,
+  MeetupController.update
 );
 
 routes.post(

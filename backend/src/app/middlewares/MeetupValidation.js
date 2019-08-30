@@ -2,7 +2,7 @@ import ApiError from '../../helpers/apiError';
 import schemas from '../../helpers/yupSchemas';
 
 class MeetupValidation {
-  async validateStoreMeetup(req, res, next) {
+  async validate(req, res, next) {
     try {
       await schemas.storeMeetup
         .validate(req.body, { abortEarly: false })
