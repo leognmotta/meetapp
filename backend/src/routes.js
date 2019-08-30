@@ -9,6 +9,8 @@ import FileController from './app/controllers/FileController';
 import AuthMiddleware from './app/middlewares/Auth';
 import UserValidation from './app/middlewares/UserValidation';
 import SessionValidation from './app/middlewares/SessionValidation';
+import MeetupValidation from './app/middlewares/MeetupValidation';
+import MeetupController from './app/controllers/MeetupController';
 
 const routes = Router();
 const upload = multer(multerConfig);
@@ -16,7 +18,7 @@ const upload = multer(multerConfig);
 routes.post('/users', UserValidation.validateStoreUser, UserController.store);
 routes.put(
   '/users',
-  AuthMiddleware.checkToken,
+  AuthMiddleware,
   UserValidation.validateUpdateUser,
   UserController.update
 );
@@ -28,8 +30,15 @@ routes.post(
 );
 
 routes.post(
+  '/meetups',
+  AuthMiddleware,
+  MeetupValidation.validateStoreMeetup,
+  MeetupController.store
+);
+
+routes.post(
   '/files',
-  AuthMiddleware.checkToken,
+  AuthMiddleware,
   upload.single('file'),
   FileController.store
 );
