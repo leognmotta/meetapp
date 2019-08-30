@@ -24,7 +24,7 @@ class MeetupController {
     } catch (error) {
       return next(error);
     }
-  }''
+  }
 }
 
 export default new MeetupController();
