@@ -13,14 +13,15 @@ class ErrorHandler {
 
   catchErrors(error, req, res, next) {
     // eslint-disable-next-line no-console
-    if (process.env.NODE_ENV === 'dev') console.log(error);
+    if (process.env.NODE_ENV === 'dev') console.log('Error: ', error);
 
     const { name, message, fields } = error;
     const status = error.statusCode || 500;
 
     return res.status(status).json({
-      name,
-      message: status === 500 ? 'Internal error.' : message,
+      name: status === 500 ? 'Internal error.' : name,
+      message:
+        status === 500 ? 'Ooops, looks like we have a problem.' : message,
       fields,
       status,
     });
