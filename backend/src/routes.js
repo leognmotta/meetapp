@@ -11,6 +11,7 @@ import UserValidation from './app/middlewares/UserValidation';
 import SessionValidation from './app/middlewares/SessionValidation';
 import MeetupValidation from './app/middlewares/MeetupValidation';
 import MeetupController from './app/controllers/MeetupController';
+import SubscriptionController from './app/controllers/SubscriptionController';
 
 const routes = Router();
 const upload = multer(multerConfig);
@@ -39,6 +40,8 @@ routes.put(
   MeetupController.update
 );
 routes.delete('/meetups/:id', AuthMiddleware, MeetupController.delete);
+
+routes.get('/subscriptions', AuthMiddleware, SubscriptionController.index);
 
 routes.post(
   '/files',
