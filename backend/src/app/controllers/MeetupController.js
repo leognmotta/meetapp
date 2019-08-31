@@ -1,6 +1,8 @@
 import { parseISO, isBefore, startOfDay, endOfDay } from 'date-fns';
 import { Op } from 'sequelize';
 import Meetup from '../models/Meetup';
+import User from '../models/User';
+import File from '../models/File';
 
 import ApiError from '../../helpers/apiError';
 
@@ -8,8 +10,7 @@ class MeetupController {
   async index(req, res, next) {
     try {
       const { page = 1, perPage = 10, date } = req.query;
-      const user_id = req.userId;
-      const where = { user_id };
+      const where = {};
 
       if (date) {
         const searchDate = parseISO(date);
@@ -22,6 +23,20 @@ class MeetupController {
         where,
         limit: perPage,
         offset: (page - 1) * perPage,
+        include: [
+          {
+            model: User,
+            attributes: ['first_name', 'last_name', 'email'],
+            as: 'organizer',
+            include: [
+              {
+                model: File,
+                as: 'file',
+                attributes: ['id', 'url', 'path'],
+              },
+            ],
+          },
+        ],
       });
 
       const maxPage = Math.ceil(meetups.count / perPage);
@@ -32,7 +47,7 @@ class MeetupController {
       const currentPage = parseInt(page, 10);
 
       return res.json({
-        data: { meetups: meetups.rows },
+        data: meetups.rows,
         pagination: {
           maxPage,
           currentPage,
