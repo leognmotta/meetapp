@@ -42,6 +42,11 @@ routes.put(
 routes.delete('/meetups/:id', AuthMiddleware, MeetupController.delete);
 
 routes.get('/subscriptions', AuthMiddleware, SubscriptionController.index);
+routes.post(
+  '/subscriptions/:meetupId',
+  AuthMiddleware,
+  SubscriptionController.store
+);
 
 routes.post(
   '/files',
