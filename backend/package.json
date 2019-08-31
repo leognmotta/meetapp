@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/server",
-    "migrate": "sequelize db:migrate"
+    "migrate": "sequelize db:migrate",
+    "queue": "nodemon src/queue"
   },
   "dependencies": {
     "bcrypt": "^3.0.6",
